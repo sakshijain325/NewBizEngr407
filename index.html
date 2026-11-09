@@ -1,3 +1,9 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Homeward Pet Match</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -249,6 +255,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
+</head>
+<body>
 <nav class="top"><div class="wrap">
   <a class="logo" href="#home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4 3 15h4v12h7v-7h4v7h7V15h4z" fill="currentColor"/><circle cx="16" cy="16" r="2.6" fill="var(--surface)"/></svg>Homeward</a>
   <div class="navlinks" id="navlinks"></div>
@@ -1064,3 +1072,6 @@ document.addEventListener('submit',e=>{
 /* ---------- boot ---------- */
 window.claude?.hot?.ready ? window.claude.hot.ready(()=>{render()}) : render();
 </script>
+
+</body>
+</html>
