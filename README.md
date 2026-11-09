@@ -30,24 +30,39 @@ The whole prototype is one static file, `index.html`. It needs no server, no Pyt
 
 ## Tour of the prototype
 
-| Page | How to get there | What it shows |
-| --- | --- | --- |
-| Home | Opens by default | Value proposition, a live sample match, how it works, breeder verification, draft pricing |
-| Match quiz | **Find a pet** | Nine questions on home, schedule, activity, experience, household, allergies, budget and size |
-| My matches | **My matches**, or finish the quiz | Ranked animals with fit scores, reasons, concerns, and filters for species and provider type |
-| Animal profile | Click any animal card | Care meters, monthly cost estimate, behavior notes, the provider's verification checklist |
-| Shelter dashboard | **For shelters & breeders** | Example rescue's inquiries ranked by fit and profile completeness |
+Sign in with one of four demo accounts (no passwords). Each account only sees its own pages.
 
-Before anyone takes the quiz, **My matches** shows the example persona "Alex," a first-time owner in an apartment. Quiz answers are saved only in your own browser.
+| Account | Role | What to try |
+| --- | --- | --- |
+| Alex Rivera | Adopter | Take the 4-part quiz, open a match, read "How we calculated this", save and compare pets, apply and track the application |
+| Ridgeline Animal Rescue | Verified shelter | Open an application, request missing info, schedule a meeting, mark an animal unavailable, add a listing |
+| Mapleleaf Poodles | Verified breeder | See the waitlist with Priority members ordered first |
+| Sunny Acres Goldens | New breeder, not verified | Listings stay locked until every verification step is done |
+
+Public pages (no sign-in): home, **Browse** (area inventory), **For shelters**, **For breeders**.
+
+**Try the two-sided demo:** apply to a Ridgeline animal as Alex, switch to the Ridgeline account and request information, then switch back to Alex and answer it in **Applications**.
+
+Demo data is saved in your own browser only. Use **Reset demo** in the footer to start over.
+
+## How matching works
+
+1. **Must-haves and safety checks first.** A failed must-have (for example, a cat in the home and an animal that isn't safe with cats) rules the animal out. If an animal can't be alone as long as your home is empty and you have no care plan, it's shown as "Needs a care plan" (capped at 55). An unassessed must-have is shown as "Needs info first" (capped at 74).
+2. **Preferences are then scored out of 100:** daily time (20), training needs (15), monthly cost (15), personality (12), time alone (10), grooming (8), age (6), size (5), distance (5), nice-to-haves (4).
+3. Every animal shows the reasons, the concerns, what's unknown, and an itemized cost estimate (monthly, care-plan extras, up-front, first year).
+
+The score is a compatibility estimate, not a guarantee.
 
 ## Where to edit
 
 Everything is in `index.html`:
 
-- `ANIMALS` and `PROVIDERS`: sample animal listings and shelters/breeders
-- `QUESTIONS`: quiz questions and answer options
-- `score()`: the matching logic (fit score, "why it fits," "ask before you meet")
-- `INQ`: sample inquiries on the shelter dashboard
+- `ANIMALS` and `PROVIDERS`: sample animal listings, shelters/breeders and their verification records
+- `QUESTIONS` and `SECS`: quiz questions, answer options and the four sections
+- `evaluate()`: the matching logic (must-haves, care plans, factor weights, explanations)
+- `costs()`: itemized cost estimates and platform fees
+- `SEED_APPS`: sample applications on the dashboards
+- `pricing()`: the pricing section
 - `:root` at the top of the `<style>` block: colors and fonts
 
 ## Branches
