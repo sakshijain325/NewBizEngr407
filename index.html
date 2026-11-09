@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Homeward Pet Match</title>
+<title>TailMates</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
@@ -258,12 +258,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 </head>
 <body>
 <nav class="top"><div class="wrap">
-  <a class="logo" href="#home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4 3 15h4v12h7v-7h4v7h7V15h4z" fill="currentColor"/><circle cx="16" cy="16" r="2.6" fill="var(--surface)"/></svg>Homeward</a>
+  <a class="logo" href="#home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4 3 15h4v12h7v-7h4v7h7V15h4z" fill="currentColor"/><circle cx="16" cy="16" r="2.6" fill="var(--surface)"/></svg>TailMates</a>
   <div class="navlinks" id="navlinks"></div>
   <div id="acct"></div>
 </div></nav>
 <main id="app" class="wrap"></main>
-<footer><div class="wrap"><span>Homeward is a class prototype for ENGR 407. Every animal, provider, person and record is a fictional example.</span><button class="link" data-act="reset">Reset demo</button></div></footer>
+<footer><div class="wrap"><span>TailMates is a class prototype for ENGR 407. Every animal, provider, person and record is a fictional example.</span><button class="link" data-act="reset">Reset demo</button></div></footer>
 <div id="layers"></div>
 <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
 
@@ -280,17 +280,17 @@ const PLAY='<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" 
 /* ---------- data ---------- */
 const PROVIDERS={
  r1:{name:'Ridgeline Animal Rescue',kind:'shelter',label:'Shelter',city:'State College, PA',verified:true,feed:'8 min ago',
-   rec:{date:'Aug 14, 2026',by:'Homeward field reviewer',next:'Aug 2027',checks:['Registered 501(c)(3) nonprofit confirmed','Facility visit: kennels, intake and isolation areas','Spay/neuter and core vaccines before every adoption','Signed adoption contract template on file'],records:['IRS determination letter','Facility visit report, 6 pages','Adoption contract, version 3']}},
+   rec:{date:'Aug 14, 2026',by:'TailMates field reviewer',next:'Aug 2027',checks:['Registered 501(c)(3) nonprofit confirmed','Facility visit: kennels, intake and isolation areas','Spay/neuter and core vaccines before every adoption','Signed adoption contract template on file'],records:['IRS determination letter','Facility visit report, 6 pages','Adoption contract, version 3']}},
  r2:{name:'Second Chance Hound Rescue',kind:'shelter',label:'Foster-based rescue',city:'Bellefonte, PA',verified:true,feed:'22 min ago',
-   rec:{date:'Jun 3, 2026',by:'Homeward field reviewer',next:'Jun 2027',checks:['Registered 501(c)(3) nonprofit confirmed','Five foster homes reference-checked','Behavior notes after at least 2 weeks in foster','Vet records shared with adopters'],records:['IRS determination letter','Foster program handbook','Sample behavior report']}},
+   rec:{date:'Jun 3, 2026',by:'TailMates field reviewer',next:'Jun 2027',checks:['Registered 501(c)(3) nonprofit confirmed','Five foster homes reference-checked','Behavior notes after at least 2 weeks in foster','Vet records shared with adopters'],records:['IRS determination letter','Foster program handbook','Sample behavior report']}},
  r3:{name:'Hollow Creek Humane Society',kind:'shelter',label:'Shelter',city:'Lewistown, PA',verified:true,feed:'1 hr ago',
-   rec:{date:'Jul 21, 2026',by:'Homeward field reviewer',next:'Jul 2027',checks:['Municipal contract shelter confirmed','Facility visit: kennels and cat rooms','Vet records shared with adopters'],records:['County shelter contract','Facility visit report']}},
+   rec:{date:'Jul 21, 2026',by:'TailMates field reviewer',next:'Jul 2027',checks:['Municipal contract shelter confirmed','Facility visit: kennels and cat rooms','Vet records shared with adopters'],records:['County shelter contract','Facility visit report']}},
  b1:{name:'Mapleleaf Poodles',kind:'breeder',label:'Breeder',city:'Lock Haven, PA',verified:true,feed:'1 hr ago',
-   rec:{date:'Sep 22, 2026',by:'Homeward field reviewer',next:'Sep 2027',checks:['In-person kennel inspection','Parents health-tested: eyes (CAER), hips (OFA), PRA DNA','Two veterinary references contacted','No more than 3 litters per year','Lifetime take-back clause in sales contract'],records:['Inspection report, 9 pages','Parents’ OFA and CAER certificates','Vet reference notes (2)','Sales contract']}},
+   rec:{date:'Sep 22, 2026',by:'TailMates field reviewer',next:'Sep 2027',checks:['In-person kennel inspection','Parents health-tested: eyes (CAER), hips (OFA), PRA DNA','Two veterinary references contacted','No more than 3 litters per year','Lifetime take-back clause in sales contract'],records:['Inspection report, 9 pages','Parents’ OFA and CAER certificates','Vet reference notes (2)','Sales contract']}},
  b2:{name:'Northwind Siberians',kind:'breeder',label:'Breeder',city:'Altoona, PA',verified:true,feed:'3 hr ago',
-   rec:{date:'Aug 30, 2026',by:'Homeward field reviewer',next:'Aug 2027',checks:['In-person cattery inspection','Parents screened for HCM by echocardiogram','Two veterinary references contacted','Kittens stay with mother until 12 weeks'],records:['Inspection report','Echocardiogram reports (2)','Vet reference notes (2)']}},
+   rec:{date:'Aug 30, 2026',by:'TailMates field reviewer',next:'Aug 2027',checks:['In-person cattery inspection','Parents screened for HCM by echocardiogram','Two veterinary references contacted','Kittens stay with mother until 12 weeks'],records:['Inspection report','Echocardiogram reports (2)','Vet reference notes (2)']}},
  b3:{name:'Stonebrook Labradors',kind:'breeder',label:'Breeder',city:'Huntingdon, PA',verified:true,feed:'40 min ago',
-   rec:{date:'Oct 6, 2026',by:'Homeward field reviewer',next:'Oct 2027',checks:['In-person kennel inspection','Parents OFA hips/elbows and EIC tested','Two veterinary references contacted','Puppies raised in-home, not in kennel runs'],records:['Inspection report','OFA and EIC certificates','Vet reference notes (2)']}},
+   rec:{date:'Oct 6, 2026',by:'TailMates field reviewer',next:'Oct 2027',checks:['In-person kennel inspection','Parents OFA hips/elbows and EIC tested','Two veterinary references contacted','Puppies raised in-home, not in kennel runs'],records:['Inspection report','OFA and EIC certificates','Vet reference notes (2)']}},
  b4:{name:'Sunny Acres Goldens',kind:'breeder',label:'Breeder',city:'Tyrone, PA',verified:false,feed:'not listing yet'},
 };
 // energy needs as minutes/day; train 1-5; groom 1-3; shed 1-5; vocal 1-5; alone = hours; true/false/null = yes/no/unknown
@@ -349,7 +349,7 @@ const SEED_APPS=[
 ];
 const SLOTS=['Thu, Nov 12 · 5:30 PM','Sat, Nov 14 · 11:00 AM','Sat, Nov 14 · 2:00 PM','Sun, Nov 15 · 1:00 PM'];
 const TODAY='Nov 9';
-const B4REC={date:'Nov 9, 2026',by:'Homeward field reviewer',next:'Nov 2027',checks:['In-person kennel inspection','Parents health-tested','Two veterinary references contacted','Signed Homeward breeder standards'],records:['Inspection report','Health-testing certificates','Vet reference notes (2)']};
+const B4REC={date:'Nov 9, 2026',by:'TailMates field reviewer',next:'Nov 2027',checks:['In-person kennel inspection','Parents health-tested','Two veterinary references contacted','Signed TailMates breeder standards'],records:['Inspection report','Health-testing certificates','Vet reference notes (2)']};
 
 /* ---------- state ---------- */
 const store={get(k,d){try{const v=localStorage.getItem('hw2-'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('hw2-'+k,JSON.stringify(v))}catch(e){}}};
@@ -420,7 +420,7 @@ function costs(a,u,extras){
   const monthly=[['Food',a.m.food],['Routine vet care, averaged',a.m.vet],['Flea, tick and heartworm prevention',a.m.prev],['Grooming',a.m.groom],[a.sp==='cat'?'Litter, toys and supplies':'Toys, treats and supplies',a.m.misc]].filter(r=>r[1]>0);
   const base=monthly.reduce((s,r)=>s+r[1],0);
   const tier=a.fee<1000?49:a.fee<=2000?99:149;
-  const upfront=[[brd?'Purchase price':'Adoption fee',a.fee],['Homeward match fee',brd?tier:0],['Paperwork and records transfer',brd?25:0],[brd?(a.sp==='cat'?'First kitten vet visits':'First puppy vet visits'):'Wellness check after adoption',brd?220:75],['Starter supplies (bed, crate or carrier, bowls, '+(a.sp==='cat'?'litter box)':'leash)'),a.sp==='cat'?150:250]];
+  const upfront=[[brd?'Purchase price':'Adoption fee',a.fee],['TailMates match fee',brd?tier:0],['Paperwork and records transfer',brd?25:0],[brd?(a.sp==='cat'?'First kitten vet visits':'First puppy vet visits'):'Wellness check after adoption',brd?220:75],['Starter supplies (bed, crate or carrier, bowls, '+(a.sp==='cat'?'litter box)':'leash)'),a.sp==='cat'?150:250]];
   const up=upfront.reduce((s,r)=>s+r[1],0);
   const ext=(extras||[]).reduce((s,r)=>s+r.amt,0);
   return {monthly,base,extras:extras||[],ext,upfront,up,reserve:a.sp==='cat'?800:1200,year:up+12*(base+ext)};
@@ -645,7 +645,7 @@ function openRecord(pid){
    <div class="cols2" style="gap:12px"><div class="panel sunk"><span class="eyebrow">Last inspection</span><h3 style="margin-top:6px">${r.date}</h3><p class="small muted">${r.by}</p></div><div class="panel sunk"><span class="eyebrow">Next review</span><h3 style="margin-top:6px">${r.next}</h3><p class="small muted">Re-verified every 12 months</p></div></div>
    <div class="stack"><h4>Checks completed</h4><ul class="checklist">${r.checks.map(c=>`<li>${CHECK}<span>${esc(c)}</span></li>`).join('')}</ul></div>
    <div class="stack"><h4>Supporting records on file</h4><ul class="clean">${r.records.map(c=>`<li>${esc(c)}</li>`).join('')}</ul></div>
-   <div class="banner"><span>${INFO}</span><span>Example record for the prototype. In the live product, adopters can view summaries; full documents stay with Homeward.</span></div>`);
+   <div class="banner"><span>${INFO}</span><span>Example record for the prototype. In the live product, adopters can view summaries; full documents stay with TailMates.</span></div>`);
 }
 
 /* ---------- apply flow ---------- */
@@ -744,11 +744,11 @@ function vIntro(kind){
     ['Proof that sets you apart','Your verified badge opens your inspection date, health testing and references, so buyers can tell you apart from puppy mills.'],
     ['A waitlist of pre-screened buyers','Every buyer has verified their ID and is ranked by fit. Priority members move up only when the match is safe.'],
     ['Pay only when a sale completes','An 8% commission on completed sales and a $150 yearly verification visit. No monthly fee.']];
-  const steps=sh?['Create your account and confirm your nonprofit or municipal status','Upload your adoption contract and a facility contact','Connect your listings or add animals with behavior notes','Start receiving ranked, verified applications']:['Create your account and business details','Share two veterinary references and parents’ health testing','Schedule your in-person inspection','Sign the Homeward breeder standards, then list litters'];
+  const steps=sh?['Create your account and confirm your nonprofit or municipal status','Upload your adoption contract and a facility contact','Connect your listings or add animals with behavior notes','Start receiving ranked, verified applications']:['Create your account and business details','Share two veterinary references and parents’ health testing','Schedule your in-person inspection','Sign the TailMates breeder standards, then list litters'];
   return `<section class="view">
    <div class="hero"><div class="stack" style="gap:18px"><span class="eyebrow">For ${sh?'shelters and rescues':'breeders'}</span>
      <h1>${sh?'Fewer returns. Less time screening.':'Show buyers proof, not promises.'}</h1>
-     <p class="lede">${sh?'Homeward sends you applications from verified adopters who already know what your animal needs, what it costs and what you haven’t assessed yet.':'Homeward verifies breeders in person before they can list, then connects them with ID-verified buyers who fit their puppies and kittens.'}</p>
+     <p class="lede">${sh?'TailMates sends you applications from verified adopters who already know what your animal needs, what it costs and what you haven’t assessed yet.':'TailMates verifies breeders in person before they can list, then connects them with ID-verified buyers who fit their puppies and kittens.'}</p>
      <div class="row"><button class="btn btn-primary" data-act="login" data-role="${sh?'shelter':'breeder'}">See the ${sh?'shelter':'breeder'} dashboard (demo)</button>${sh?'':'<button class="btn btn-ghost" data-act="login" data-role="newbreeder">Try onboarding as a new breeder</button>'}</div></div>
      <div class="panel sunk stack"><span class="eyebrow">What you pay</span><div class="price">${sh?'Free':'8% <small>per completed sale</small>'}</div><p class="muted">${sh?'For registered nonprofits and municipal shelters. Adopters also pay $0 for shelter adoptions.':'Plus a $150 yearly verification visit. Buyers pay a one-time match fee of $49–$149 and a $25 paperwork fee.'}</p></div></div>
    <div class="cols3">${B.map(b=>`<div class="stack"><h3>${b[0]}</h3><p class="muted">${b[1]}</p></div>`).join('')}</div>
@@ -977,7 +977,7 @@ function vVerify(){
   const pid=myProv(),p=PROVIDERS[pid];
   if(p.verified&&p.rec){const r=p.rec;return `<section class="view tight"><div class="spread"><div class="sec-h"><span class="eyebrow">Verification</span><h2>${esc(p.name)} is verified</h2><p class="muted">Adopters can open this record from your badge. Next review: ${r.next}.</p></div>${badge(pid)}</div>
      <div class="cols2"><div class="panel stack"><h4>Checks completed ${r.date}</h4><ul class="checklist">${r.checks.map(c=>`<li>${CHECK}<span>${esc(c)}</span></li>`).join('')}</ul></div><div class="panel stack"><h4>Records on file</h4><ul class="clean">${r.records.map(c=>`<li>${esc(c)}</li>`).join('')}</ul><p class="small muted">Example records.</p></div></div></section>`}
-  const ST=[['details','Business and contact details','Name, address, licensing'],['vets','Two veterinary references','We contact both vets directly'],['health','Parents’ health testing','Upload OFA, CAER or breed-specific results'],['inspect','In-person inspection','A Homeward reviewer visits your home or kennel'],['standards','Sign the Homeward breeder standards','Litter limits, take-back clause, honest listings']];
+  const ST=[['details','Business and contact details','Name, address, licensing'],['vets','Two veterinary references','We contact both vets directly'],['health','Parents’ health testing','Upload OFA, CAER or breed-specific results'],['inspect','In-person inspection','A TailMates reviewer visits your home or kennel'],['standards','Sign the TailMates breeder standards','Litter limits, take-back clause, honest listings']];
   const done=ST.filter(s=>S.nb[s[0]]).length;
   return `<section class="view tight"><div class="sec-h"><span class="eyebrow">Verification · ${done} of ${ST.length} done</span><h2>Finish verification to start listing</h2><p class="muted">Adopters only see animals from verified providers. Most breeders finish in about two weeks; the inspection takes about an hour.</p></div>
    <div class="panel">${ST.map(([k,l,s],i)=>`<div class="vstep"><span class="vnum ${S.nb[k]?'ok':''}">${S.nb[k]?'✓':i+1}</span><div><b>${l}</b><div class="small muted">${s}</div></div>${S.nb[k]?'<span class="small muted">Done</span>':`<button class="btn btn-ghost btn-sm" data-act="nbstep" data-k="${k}">Complete (demo)</button>`}</div>`).join('')}</div>
