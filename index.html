@@ -352,6 +352,19 @@ const SLOTS=['Thu, Nov 12 · 5:30 PM','Sat, Nov 14 · 11:00 AM','Sat, Nov 14 · 
 const TODAY='Nov 9';
 const B4REC={date:'Nov 9, 2026',by:'TailMates field reviewer',next:'Nov 2027',checks:['In-person kennel inspection','Parents health-tested','Two veterinary references contacted','Signed TailMates breeder standards'],records:['Inspection report','Health-testing certificates','Vet reference notes (2)']};
 
+const LIVE={org:'Centre County PAWS',addr:'1401 Trout Road, State College, PA',hours:'Mon–Wed 11–7, Sat–Sun 11–4, closed Thu–Fri; visits by appointment',pulled:'Nov 10, 2026',src:'https://www.petfinder.com/member/us/pa/state-college/centre-county-paws-pa106',
+ pets:[['Rooti Tooti','dog','Mixed breed','Adult','Female','dog/rooti-tooti-b8c6e054-d31d-4074-91bf-303a42437a18'],['Lucky','cat','Domestic shorthair','Young','Male','cat/lucky-99d9c9dc-5f57-4d8c-beaf-cc4ba0376a1c'],['Poppin Fresh','cat','Domestic shorthair','Kitten','Male','cat/poppin-fresh-c6796c86-e12b-49e7-b4fe-4475a74ba701'],['Obi','dog','Terrier','Senior','Male','dog/obi-66bf2b9d-e1e8-4939-8410-0aa6e6109f5a'],['Elsa','cat','Domestic medium hair','Young','Female','cat/elsa-13a06c5d-ebfd-4f96-be52-50d3954d3be2'],['D.A.R.E','dog','Mixed breed','Adult','Male','dog/d-a-r-e-f273ec21-6557-4bfd-b322-429438b6dfbb'],['Meadow','dog','Mixed breed','Senior','Female','dog/meadow-5b5da0db-4a59-48c2-bf40-163713a8782a'],['Domino Derval','cat','Domestic shorthair','Kitten','Female','cat/domino-derval-1f47c236-e04a-4a6c-a93f-374f813d5646'],['Helios','dog','German shepherd','Young','Male','dog/helios-ff54ab25-ca8e-4f55-b3d0-785ddff3cec0'],['Fernando','cat','Domestic shorthair','Senior','Male','cat/fernando-cf3a2cb7-a7b5-4d9d-85d9-e8f35ab084ea'],['Showcase','cat','Domestic medium hair','Kitten','Male','cat/showcase-23f24913-d892-47d1-87df-12e96be06129'],['Tundra','dog','Mixed breed','Young','Male','dog/tundra-06d4d236-56b6-4538-b5c2-15c9c09974fe'],['Blue Lizard','dog','Mixed breed','Young','Male','dog/blue-lizard-df104487-dd02-4c7d-af72-a92acdd5295c'],['Diego','dog','Mixed breed','Senior','Male','dog/diego-712cabc1-6903-43dc-8740-c819bc899593'],['Shyla Bear','dog','Mixed breed','Adult','Female','dog/shyla-bear-4d3dc0fa-089a-44f1-b942-c82e57600fbb'],['Diana','dog','German shepherd','Adult','Female','dog/diana-802c7ce0-f6a5-455c-b07b-3a10edaa9234'],['Plinko','cat','Domestic medium hair','Kitten','Female','cat/plinko-2fb60b4b-ec1c-4cac-a91f-11ea5dcd9b3a'],['Niko','dog','Cocker spaniel','Adult','Male','dog/niko-f559aae0-36eb-4dbb-8a79-dc946deadbda'],['Pizza With Sunglasses','cat','Domestic shorthair','Kitten','Male','cat/pizza-with-sunglasses-54e459fd-cf54-4ee2-8a98-08da1613ef24'],['Triple Dipper','dog','Mixed breed','Adult','Female','dog/triple-dipper-f1e63eb2-804e-4614-beb8-c67ac780c44f'],['Gracie','dog','Shiba Inu','Senior','Female','dog/gracie-d2592ad4-79b3-4dcb-97a5-7c0548ef2a66'],['Rougarou','cat','Domestic shorthair','Kitten','Male','cat/rougarou-ebef1ace-38db-4d9b-9bed-f43b77ecc80f'],['Wawa','dog','German shepherd mix','Young','Male','dog/wawa-5a67ebf1-9d4c-4eaa-9a61-008dc8be55e9'],['Rain','cat','Domestic shorthair','Kitten','Female','cat/rain-380fd926-83ef-4735-90e5-56d6cfd8c85b']]};
+function liveSection(){
+  const F=S.filter;let L=LIVE.pets.map((p,i)=>({i,name:p[0],sp:p[1],breed:p[2],age:p[3],sex:p[4],url:'https://www.petfinder.com/'+p[5]+'/pa/state-college/centre-county-paws-pa106/details/'}));
+  if(F.sp!=='all')L=L.filter(p=>p.sp===F.sp);
+  if(F.src==='breeder')return '';
+  const dogs=LIVE.pets.filter(p=>p[1]==='dog').length,cats=LIVE.pets.length-dogs;
+  return `<div class="stack" style="gap:16px;margin-top:20px;scroll-margin-top:90px" id="live">
+   <div class="spread"><div class="sec-h"><span class="eyebrow" style="color:var(--coral-ink)">Real listings · pulled ${LIVE.pulled}</span><h2>Available now at ${LIVE.org}</h2><p class="muted">${dogs} dogs and ${cats} cats listed by a real shelter in State College. ${esc(LIVE.addr)} · ${LIVE.hours}.</p></div><a class="btn btn-ghost btn-sm" href="${LIVE.src}" target="_blank" rel="noopener">See the shelter’s full page</a></div>
+   <div class="banner coral"><span>${INFO}</span><span>These are real animals from the shelter’s public listings, captured on ${LIVE.pulled}; some may have been adopted since. ${LIVE.org} is not a TailMates partner, so these listings aren’t verified or scored. Their public listings don’t include the behavior details our matching needs. Tap any animal to view it on Petfinder.</span></div>
+   <div class="grid">${L.map(p=>`<a class="card" href="${p.url}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit"><div class="tile t${p.i%4}">${p.sp==='dog'?DOG:CAT}<span class="pill" style="color:var(--coral-ink)"><span class="dot"></span>Real listing</span></div><div class="body"><div class="spread"><h3>${esc(p.name)}</h3><span class="meta">${p.sp==='dog'?'Dog':'Cat'}</span></div><div class="meta">${esc(p.breed)} · ${p.age} · ${p.sex}</div><span class="link small" style="align-self:flex-start">View on Petfinder ↗</span></div></a>`).join('')||'<div class="empty">No real listings match this filter.</div>'}</div>
+  </div>`;
+}
 /* ---------- state ---------- */
 const store={get(k,d){try{const v=localStorage.getItem('hw2-'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('hw2-'+k,JSON.stringify(v))}catch(e){}}};
 const clone=o=>JSON.parse(JSON.stringify(o));
@@ -698,7 +711,7 @@ function vHome(){
       <h1>Meet the pet that fits the life <span class="hl">you actually live.</span></h1>
       <p class="lede">A four-part quiz about your home, schedule, budget and experience. Matches from verified shelters and breeders, each with a plain explanation of why it fits, what to ask and what it will cost.</p>
       <div class="row"><a class="btn btn-primary" href="#quiz">Take the match quiz</a><a class="btn btn-ghost" href="#browse">Browse animals near State College</a></div>
-      <p class="small muted">About 4 minutes · free for adopters</p>
+      <p class="small muted">About 4 minutes · free for adopters · <a href="#browse" data-act="tolive">See ${LIVE.pets.length} real animals at ${LIVE.org}</a></p>
     </div>
     <div class="stack" style="gap:10px">
       <div class="spread"><span class="eyebrow">Example match</span><span class="small muted">Alex: first-time owner, apartment, away 8 hrs a day</span></div>
@@ -781,9 +794,10 @@ function vBrowse(){
   const fb=(key,opts)=>opts.map(([v,l])=>`<button class="filter" data-act="bfilter" data-k="${key}" data-v="${v}" aria-pressed="${F[key]==v}">${l}</button>`).join('');
   return `<section class="view tight">
    <div class="spread"><div class="sec-h"><span class="eyebrow">Area inventory</span><h2>${allAnimals().filter(available).length} animals available within 60 miles of State College</h2><p class="muted">From ${provs.length} verified shelters, rescues and breeders. Listings update as providers add or place animals.</p></div>${adopter?'':'<a class="btn btn-ghost" href="#quiz">Get personalized matches</a>'}</div>
-   <div class="banner"><span>${INFO}</span><span>Sample data. In the live product, this page pulls from each provider’s listings feed and removes animals as soon as they’re placed.</span></div>
+   <div class="banner"><span>${INFO}</span><span>The animals in this first section are fictional examples that show how TailMates matching works. <a href="#browse" data-act="tolive">Jump to ${LIVE.pets.length} real animals at ${LIVE.org}</a>, pulled ${LIVE.pulled}.</span></div>
    <div class="filters">${fb('sp',[['all','All'],['dog','Dogs'],['cat','Cats']])}<span style="width:8px"></span>${fb('src',[['all','All providers'],['shelter','Shelters and rescues'],['breeder','Breeders']])}<span style="width:8px"></span>${fb('dist',[['any','Any distance'],['10','10 mi'],['25','25 mi'],['50','50 mi']])}${adopter?`<span style="width:8px"></span>${fb('sort',[['fit','Best fit'],['dist','Closest']])}`:''}</div>
    <div class="grid">${list.map(card).join('')||'<div class="empty">No animals match these filters.</div>'}</div>
+   ${liveSection()}
    <details class="more"><summary>Data sources (${provs.length})</summary><div class="tablewrap"><table class="data" style="min-width:560px"><thead><tr><th>Provider</th><th>Type</th><th>Location</th><th>Listings</th><th>Last synced</th></tr></thead><tbody>
     ${provs.map(([k,p])=>`<tr data-act="record" data-id="${k}"><td><b>${esc(p.name)}</b></td><td>${p.label}</td><td>${p.city}</td><td class="num">${allAnimals().filter(a=>a.p===k&&available(a)).length}</td><td class="num">${p.feed}</td></tr>`).join('')}</tbody></table></div></details>
   </section>`;
@@ -1029,6 +1043,7 @@ const ACT={
  reset:()=>{const r=S.role;Object.assign(S,fresh());S.role=r;PROVIDERS.b4.verified=false;delete PROVIDERS.b4.rec;PROVIDERS.b4.feed='not listing yet';save();closeAll();render();toast('Demo data reset.')},
  bfilter:el=>{S.filter[el.dataset.k]=el.dataset.v;rerender()},
  mfilter:el=>{S.mfilter=el.dataset.v;rerender()},
+ tolive:()=>{const go=()=>{const el=document.getElementById('live');el&&el.scrollIntoView({behavior:'smooth'})};if(location.hash!=='#browse'){location.hash='browse';setTimeout(go,80)}else go()},
  retake:()=>{S.reset=true;S.jump='species';closeAll();if(location.hash==='#quiz')render();else location.hash='quiz'},
  addplan:()=>{S.reset=true;S.jump='careplan';closeAll();if(location.hash==='#quiz')render();else location.hash='quiz'},
  apply:el=>{closeLayer();startApply(+el.dataset.id)},
