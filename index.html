@@ -358,6 +358,7 @@ function liveSection(){
   const F=S.filter;let L=LIVE.pets.map((p,i)=>({i,name:p[0],sp:p[1],breed:p[2],age:p[3],sex:p[4],url:'https://www.petfinder.com/'+p[5]+'/pa/state-college/centre-county-paws-pa106/details/'}));
   if(F.sp!=='all')L=L.filter(p=>p.sp===F.sp);
   if(F.src==='breeder')return '';
+  const ld=milesTo('State College');if(F.dist!=='any'&&ld>+F.dist)return `<p class="small muted" id="live">Real listings from ${LIVE.org} are about ${ld} miles from ${esc(S.loc)}, outside your radius. <button class="link" data-act="bfilter" data-k="dist" data-v="any">Show them anyway</button></p>`;
   const dogs=LIVE.pets.filter(p=>p[1]==='dog').length,cats=LIVE.pets.length-dogs;
   return `<div class="stack" style="gap:16px;margin-top:20px;scroll-margin-top:90px" id="live">
    <div class="spread"><div class="sec-h"><span class="eyebrow" style="color:var(--coral-ink)">Real listings · pulled ${LIVE.pulled}</span><h2>Available now at ${LIVE.org}</h2><p class="muted">${dogs} dogs and ${cats} cats listed by a real shelter in State College. ${esc(LIVE.addr)} · ${LIVE.hours}.</p></div><a class="btn btn-ghost btn-sm" href="${LIVE.src}" target="_blank" rel="noopener">See the shelter’s full page</a></div>
@@ -365,13 +366,32 @@ function liveSection(){
    <div class="grid">${L.map(p=>`<a class="card" href="${p.url}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit"><div class="tile t${p.i%4}">${p.sp==='dog'?DOG:CAT}<span class="pill" style="color:var(--coral-ink)"><span class="dot"></span>Real listing</span></div><div class="body"><div class="spread"><h3>${esc(p.name)}</h3><span class="meta">${p.sp==='dog'?'Dog':'Cat'}</span></div><div class="meta">${esc(p.breed)} · ${p.age} · ${p.sex}</div><span class="link small" style="align-self:flex-start">View on Petfinder ↗</span></div></a>`).join('')||'<div class="empty">No real listings match this filter.</div>'}</div>
   </div>`;
 }
+/* ---------- location ---------- */
+const PLACES={'State College':[40.7934,-77.86],'Bellefonte':[40.9134,-77.7783],'Lewistown':[40.5992,-77.5714],'Lock Haven':[41.137,-77.4469],'Altoona':[40.5187,-78.3947],'Huntingdon':[40.4848,-78.0103],'Tyrone':[40.6706,-78.2386],'Williamsport':[41.2412,-77.0011],'Johnstown':[40.3267,-78.922],'Harrisburg':[40.2732,-76.8867],'Lancaster':[40.0379,-76.3055],'Pittsburgh':[40.4406,-79.9959],'Philadelphia':[39.9526,-75.1652],'Allentown':[40.6084,-75.4902],'Scranton':[41.409,-75.6624],'Erie':[42.1292,-80.0851]};
+const ZIPS={'16801':'State College','16802':'State College','16803':'State College','16804':'State College','16805':'State College','16823':'Bellefonte','17044':'Lewistown','17745':'Lock Haven','16601':'Altoona','16602':'Altoona','16652':'Huntingdon','16686':'Tyrone','17701':'Williamsport','15901':'Johnstown','17101':'Harrisburg','17602':'Lancaster','15213':'Pittsburgh','15222':'Pittsburgh','19103':'Philadelphia','19104':'Philadelphia','18101':'Allentown','18503':'Scranton','16501':'Erie'};
+function hav(a,b){const R=3958.8,r=x=>x*Math.PI/180,dl=r(b[0]-a[0]),dn=r(b[1]-a[1]);const h=Math.sin(dl/2)**2+Math.cos(r(a[0]))*Math.cos(r(b[0]))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+const here=()=>PLACES[S.loc]||PLACES['State College'];
+const milesTo=city=>Math.max(3,Math.round(hav(here(),PLACES[city]||PLACES['State College'])*1.25)); // ~driving miles
+const miles=a=>milesTo(P(a).city.split(',')[0]);
+function findPlace(q){q=(q||'').trim();if(!q)return null;const z=q.match(/\b\d{5}\b/);if(z)return ZIPS[z[0]]||null;const k=q.replace(/,?\s*(pa|pennsylvania)\.?$/i,'').trim().toLowerCase();return Object.keys(PLACES).find(n=>n.toLowerCase()===k)||Object.keys(PLACES).find(n=>n.toLowerCase().startsWith(k))||null}
+function locControl(){
+  return `<form class="row" id="locform" style="gap:8px" autocomplete="off"><label class="small" for="locq" style="font-weight:700">Near</label>
+    <input type="text" id="locq" list="placelist" value="${esc(S.loc)}, PA" style="width:200px" aria-label="City or ZIP code">
+    <datalist id="placelist">${Object.keys(PLACES).map(n=>`<option value="${n}, PA">`).join('')}</datalist>
+    <button class="btn btn-ghost btn-sm" type="submit">Update</button>${S.locErr?`<span class="small" style="color:var(--bad)">${esc(S.locErr)}</span>`:''}</form>`;
+}
+function nearestNote(){
+  const cities=[...new Set(Object.values(PROVIDERS).filter(p=>p.verified).map(p=>p.city.split(',')[0]))];
+  const near=cities.map(c=>[c,milesTo(c)]).sort((x,y)=>x[1]-y[1])[0];
+  return `<div class="empty stack" style="justify-items:center;gap:10px"><h3 style="color:var(--ink)">TailMates isn’t in ${esc(S.loc)} yet</h3><p>Our closest partner is in ${near[0]}, about ${near[1]} miles away. We’re launching in Centre County first and adding regions as shelters and breeders join.</p><div class="row" style="justify-content:center"><button class="btn btn-primary btn-sm" data-act="bfilter" data-k="dist" data-v="any">Show all distances</button><button class="btn btn-ghost btn-sm" data-act="setloc" data-v="State College">Switch to State College</button></div></div>`;
+}
 /* ---------- state ---------- */
 const store={get(k,d){try{const v=localStorage.getItem('hw2-'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('hw2-'+k,JSON.stringify(v))}catch(e){}}};
 const clone=o=>JSON.parse(JSON.stringify(o));
-function fresh(){return {role:null,answers:clone(ALEX),sample:true,verified:false,premium:false,saved:[2,7,5],apps:clone(SEED_APPS),unavail:[],custom:[],prof:{landlord:false,vetref:false},nb:{details:true,vets:false,health:false,inspect:false,standards:false},nbVerified:false}}
+function fresh(){return {role:null,loc:'State College',answers:clone(ALEX),sample:true,verified:false,premium:false,saved:[2,7,5],apps:clone(SEED_APPS),unavail:[],custom:[],prof:{landlord:false,vetref:false},nb:{details:true,vets:false,health:false,inspect:false,standards:false},nbVerified:false}}
 const S=Object.assign(fresh(),store.get('state',{}));
-S.compare=[];S.filter={sp:'all',src:'all',dist:'any',sort:'fit'};S.mfilter='all';
-function save(){const {compare,filter,mfilter,draft,qid,after,...keep}=S;store.set('state',keep)}
+S.compare=[];S.filter={sp:'all',src:'all',dist:'50',sort:'fit'};if(!PLACES[S.loc])S.loc='State College';S.mfilter='all';
+function save(){const {compare,filter,mfilter,draft,qid,after,locErr,...keep}=S;store.set('state',keep)}
 if(S.nbVerified){PROVIDERS.b4.verified=true;PROVIDERS.b4.rec=B4REC;PROVIDERS.b4.feed='today'}
 
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -494,8 +514,8 @@ function evaluate(a,u){
   const sz=a.sp!=='dog'||!u.size||u.size==='any'||a.size===u.size;
   f.push({k:'size',name:'Size',short:'your size preference',w:5,pts:sz?1:.4,st:sz?'good':'mixed',text:a.sp!=='dog'?'Size doesn’t apply to cats.':u.size==='any'?'No size preference.':sz?'The size you prefer.':`About ${a.wt} lb, not the size you prefer.`});
   // 9 distance (5)
-  const dok=a.mi<=u.travel;
-  f.push({k:'dist',name:'Distance',short:'your travel range',w:5,pts:dok?1:.3,st:dok?'good':'concern',text:dok?`${a.mi} mi away, within your range.`:`${a.mi} mi away, beyond your ${u.travel}-mile range.`});
+  const dok=miles(a)<=u.travel;
+  f.push({k:'dist',name:'Distance',short:'your travel range',w:5,pts:dok?1:.3,st:dok?'good':'concern',text:dok?`${miles(a)} mi away, within your range.`:`${miles(a)} mi away, beyond your ${u.travel}-mile range.`});
   // 10 nice-to-haves (4)
   const nl=niceList(u,m);
   let np=1,nt='No nice-to-haves selected.',nst='good';
@@ -569,7 +589,7 @@ function card(a){
     <div class="tile ${tcls(a)}">${art(a)}${e?fitPill(e):''}${off?'<span class="pill" style="left:auto;right:56px">Unavailable</span>':''}
       ${adopter?`<button class="save" data-act="save" data-id="${a.id}" aria-pressed="${sv}" aria-label="${sv?'Remove '+esc(a.name)+' from saved':'Save '+esc(a.name)}">${HEART}</button>`:''}</div>
     <div class="body">
-      <div class="spread"><h3>${esc(a.name)}</h3><span class="meta">${a.mi} mi</span></div>
+      <div class="spread"><h3>${esc(a.name)}</h3><span class="meta">${miles(a)} mi</span></div>
       <div class="meta">${esc(a.breed)} · ${esc(a.age)} · ${esc(p.name)}</div>
       ${badge(a.p)}${fit}
     </div></article>`;
@@ -603,7 +623,7 @@ function openAnimal(id){
   <div class="inner">
     <div class="stack" style="gap:8px">
       <div class="spread"><h2>${esc(a.name)}</h2>${adopter?`<button class="btn btn-ghost btn-sm" data-act="save" data-id="${a.id}" aria-pressed="${S.saved.includes(a.id)}">${S.saved.includes(a.id)?'Saved':'Save'}</button>`:''}</div>
-      <p class="muted">${esc(a.breed)} · ${esc(a.age)}${a.wt?` · about ${a.wt} lb`:''} · ${a.mi} mi away</p>
+      <p class="muted">${esc(a.breed)} · ${esc(a.age)}${a.wt?` · about ${a.wt} lb`:''} · ${miles(a)} mi away</p>
       <div class="row">${badge(a.p)}<span class="meta">${esc(p.name)}, ${esc(p.city)}</span></div>
     </div>
     ${e?`<div class="panel stack">
@@ -787,16 +807,17 @@ function vBrowse(){
   let list=allAnimals().filter(available);
   if(F.sp!=='all')list=list.filter(a=>a.sp===F.sp);
   if(F.src!=='all')list=list.filter(a=>P(a).kind===F.src);
-  if(F.dist!=='any')list=list.filter(a=>a.mi<=+F.dist);
+  if(F.dist!=='any')list=list.filter(a=>miles(a)<=+F.dist);
   if(F.sort==='fit'&&adopter){const r={blocked:3,careplan:2,info:1};list=list.map(a=>[a,evaluate(a,S.answers)]).sort((x,y)=>(r[x[1].gate]||0)-(r[y[1].gate]||0)||y[1].score-x[1].score).map(x=>x[0])}
-  else list.sort((a,b)=>a.mi-b.mi);
+  else list.sort((a,b)=>miles(a)-miles(b));
   const provs=Object.entries(PROVIDERS).filter(([k,p])=>p.verified);
   const fb=(key,opts)=>opts.map(([v,l])=>`<button class="filter" data-act="bfilter" data-k="${key}" data-v="${v}" aria-pressed="${F[key]==v}">${l}</button>`).join('');
   return `<section class="view tight">
-   <div class="spread"><div class="sec-h"><span class="eyebrow">Area inventory</span><h2>${allAnimals().filter(available).length} animals available within 60 miles of State College</h2><p class="muted">From ${provs.length} verified shelters, rescues and breeders. Listings update as providers add or place animals.</p></div>${adopter?'':'<a class="btn btn-ghost" href="#quiz">Get personalized matches</a>'}</div>
+   <div class="spread"><div class="sec-h"><span class="eyebrow">Area inventory</span><h2>${list.length} animal${list.length===1?'':'s'} ${F.dist==='any'?'from all partners':`within ${F.dist} miles`} of ${esc(S.loc)}, PA</h2><p class="muted">From ${provs.length} verified shelters, rescues and breeders. Listings update as providers add or place animals.</p></div>${adopter?'':'<a class="btn btn-ghost" href="#quiz">Get personalized matches</a>'}</div>
    <div class="banner"><span>${INFO}</span><span>The animals in this first section are fictional examples that show how TailMates matching works. <a href="#browse" data-act="tolive">Jump to ${LIVE.pets.length} real animals at ${LIVE.org}</a>, pulled ${LIVE.pulled}.</span></div>
-   <div class="filters">${fb('sp',[['all','All'],['dog','Dogs'],['cat','Cats']])}<span style="width:8px"></span>${fb('src',[['all','All providers'],['shelter','Shelters and rescues'],['breeder','Breeders']])}<span style="width:8px"></span>${fb('dist',[['any','Any distance'],['10','10 mi'],['25','25 mi'],['50','50 mi']])}${adopter?`<span style="width:8px"></span>${fb('sort',[['fit','Best fit'],['dist','Closest']])}`:''}</div>
-   <div class="grid">${list.map(card).join('')||'<div class="empty">No animals match these filters.</div>'}</div>
+   ${locControl()}
+   <div class="filters">${fb('sp',[['all','All'],['dog','Dogs'],['cat','Cats']])}<span style="width:8px"></span>${fb('src',[['all','All providers'],['shelter','Shelters and rescues'],['breeder','Breeders']])}<span style="width:8px"></span>${fb('dist',[['10','10 mi'],['25','25 mi'],['50','50 mi'],['100','100 mi'],['any','Any distance']])}${adopter?`<span style="width:8px"></span>${fb('sort',[['fit','Best fit'],['dist','Closest']])}`:''}</div>
+   ${list.length?`<div class="grid">${list.map(card).join('')}</div>`:(F.dist!=='any'&&!allAnimals().filter(available).some(a=>miles(a)<=+F.dist)?nearestNote():'<div class="empty">No animals match these filters.</div>')}
    ${liveSection()}
    <details class="more"><summary>Data sources (${provs.length})</summary><div class="tablewrap"><table class="data" style="min-width:560px"><thead><tr><th>Provider</th><th>Type</th><th>Location</th><th>Listings</th><th>Last synced</th></tr></thead><tbody>
     ${provs.map(([k,p])=>`<tr data-act="record" data-id="${k}"><td><b>${esc(p.name)}</b></td><td>${p.label}</td><td>${p.city}</td><td class="num">${allAnimals().filter(a=>a.p===k&&available(a)).length}</td><td class="num">${p.feed}</td></tr>`).join('')}</tbody></table></div></details>
@@ -846,6 +867,7 @@ function vMatches(){
   return `<section class="view tight">
    <div class="spread"><div class="sec-h"><span class="eyebrow">${S.sample?'Example matches for Alex':'Your matches'}</span><h2>${fits.length} match${fits.length===1?'':'es'}${strong?`, ${strong} strong`:''}</h2></div><div class="row"><a class="btn btn-ghost btn-sm" href="#profile">Profile</a><button class="btn btn-ghost btn-sm" data-act="retake">Edit answers</button></div></div>
    <div class="chips">${Object.keys(m).map(k=>`<span class="chip must">Must: ${REQ_SHORT[k]}</span>`).join('')}${nl.map(k=>`<span class="chip">Nice: ${REQ_SHORT[k]}</span>`).join('')}<span class="chip">${label('home',u.home)}</span><span class="chip">Away ~${u.away} hrs</span><span class="chip">${label('time',u.time)} a day</span><span class="chip">Budget ${u.budget==='notsure'?'not sure':label('budget',u.budget)}</span></div>
+   ${locControl()}
    ${S.sample?`<div class="banner"><span>${INFO}</span><span>These use Alex’s example answers. <button class="link" data-act="retake">Take the quiz</button> to see your own.</span></div>`:''}
    ${rule?`<div class="banner coral"><span>${INFO}</span><span><b>Before you apply:</b> ${rule}</span></div>`:''}
    <div class="filters">${filters.map(([k,l])=>`<button class="filter" data-act="mfilter" data-v="${k}" aria-pressed="${S.mfilter===k}">${l}</button>`).join('')}</div>
@@ -866,7 +888,7 @@ function vSaved(){
      ['Exercise',a=>`about ${a.ex} min a day`],['Training needs',a=>meter(a.train)],['Alone',a=>`about ${a.alone} hrs`],
      ['Kids · dogs · cats',a=>`${yn(a.kids)} · ${yn(a.dogs)} · ${yn(a.cats)}`],
      ['Monthly cost',(a,e)=>money(e.costs.base)+(e.costs.ext?` + ${money(e.costs.ext)} extras`:'')],['Up front',(a,e)=>money(e.costs.up)],
-     ['Distance',a=>`${a.mi} mi · ${esc(P(a).name)}`],['To ask about',(a,e)=>e.concerns.length?`<ul class="clean">${e.concerns.slice(0,3).map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`:'Nothing flagged'],
+     ['Distance',a=>`${miles(a)} mi · ${esc(P(a).name)}`],['To ask about',(a,e)=>e.concerns.length?`<ul class="clean">${e.concerns.slice(0,3).map(c=>`<li>${esc(c)}</li>`).join('')}</ul>`:'Nothing flagged'],
      ['Unknown',(a,e)=>e.unknowns.join(', ')||'None']];
     table=`<div class="stack"><h3>Side by side</h3><div class="tablewrap"><table class="cmp"><thead><tr><th></th>${cmp.map(a=>`<th>${esc(a.name)}</th>`).join('')}</tr></thead><tbody>${R.map(([n,fn])=>`<tr><th scope="row">${n}</th>${cmp.map((a,i)=>`<td>${fn(a,E[i])}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`;
   }
@@ -1043,6 +1065,7 @@ const ACT={
  reset:()=>{const r=S.role;Object.assign(S,fresh());S.role=r;PROVIDERS.b4.verified=false;delete PROVIDERS.b4.rec;PROVIDERS.b4.feed='not listing yet';save();closeAll();render();toast('Demo data reset.')},
  bfilter:el=>{S.filter[el.dataset.k]=el.dataset.v;rerender()},
  mfilter:el=>{S.mfilter=el.dataset.v;rerender()},
+ setloc:el=>{S.loc=el.dataset.v;S.locErr='';save();rerender();toast(`Showing animals near ${S.loc}, PA.`)},
  tolive:()=>{const go=()=>{const el=document.getElementById('live');el&&el.scrollIntoView({behavior:'smooth'})};if(location.hash!=='#browse'){location.hash='browse';setTimeout(go,80)}else go()},
  retake:()=>{S.reset=true;S.jump='species';closeAll();if(location.hash==='#quiz')render();else location.hash='quiz'},
  addplan:()=>{S.reset=true;S.jump='careplan';closeAll();if(location.hash==='#quiz')render();else location.hash='quiz'},
@@ -1078,6 +1101,9 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('tr[data-act]')){ACT[e.target.dataset.act](e.target)}});
 document.addEventListener('submit',e=>{
+  if(e.target.id==='locform'){e.preventDefault();const q=document.getElementById('locq').value,pl=findPlace(q);
+    if(!pl){S.locErr='We couldn\u2019t find that place. Try a Pennsylvania city or ZIP code, like State College or 16801.';rerender();return}
+    S.loc=pl;S.locErr='';save();rerender();toast(`Showing animals near ${pl}, PA.`);return}
   if(e.target.id!=='addform')return;e.preventDefault();
   const g=id=>document.getElementById(id).value, tri=id=>({null:null,true:true,false:false})[g(id)];
   const pid=myProv(),sp=g('nf-sp'),id=100+S.custom.length+1,fee=+g('nf-fee')||0;
