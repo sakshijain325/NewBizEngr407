@@ -355,16 +355,25 @@ const B4REC={date:'Nov 9, 2026',by:'TailMates field reviewer',next:'Nov 2027',ch
 const LIVE={org:'Centre County PAWS',addr:'1401 Trout Road, State College, PA',hours:'Mon–Wed 11–7, Sat–Sun 11–4, closed Thu–Fri; visits by appointment',src:'https://www.centrecountypaws.org',
  pets:[['Rooti Tooti','dog','Mixed breed','Adult','Female'],['Lucky','cat','Domestic shorthair','Young','Male'],['Poppin Fresh','cat','Domestic shorthair','Kitten','Male'],['Obi','dog','Terrier','Senior','Male'],['Elsa','cat','Domestic medium hair','Young','Female'],['D.A.R.E','dog','Mixed breed','Adult','Male'],['Meadow','dog','Mixed breed','Senior','Female'],['Domino Derval','cat','Domestic shorthair','Kitten','Female'],['Helios','dog','German shepherd','Young','Male'],['Fernando','cat','Domestic shorthair','Senior','Male'],['Showcase','cat','Domestic medium hair','Kitten','Male'],['Tundra','dog','Mixed breed','Young','Male'],['Blue Lizard','dog','Mixed breed','Young','Male'],['Diego','dog','Mixed breed','Senior','Male'],['Shyla Bear','dog','Mixed breed','Adult','Female'],['Diana','dog','German shepherd','Adult','Female'],['Plinko','cat','Domestic medium hair','Kitten','Female'],['Niko','dog','Cocker spaniel','Adult','Male'],['Pizza With Sunglasses','cat','Domestic shorthair','Kitten','Male'],['Triple Dipper','dog','Mixed breed','Adult','Female'],['Gracie','dog','Shiba Inu','Senior','Female'],['Rougarou','cat','Domestic shorthair','Kitten','Male'],['Wawa','dog','German shepherd mix','Young','Male'],['Rain','cat','Domestic shorthair','Kitten','Female']]};
 function liveSection(){
-  const F=S.filter;let L=LIVE.pets.map((p,i)=>({i,name:p[0],sp:p[1],breed:p[2],age:p[3],sex:p[4],url:LIVE.src}));
+  const F=S.filter;let L=LIVE.pets.map((p,i)=>({i,name:p[0],sp:p[1],breed:p[2],age:p[3],sex:p[4]}));
   if(F.sp!=='all')L=L.filter(p=>p.sp===F.sp);
   if(F.src==='breeder')return '';
-  const ld=milesTo('State College');if(F.dist!=='any'&&ld>+F.dist)return `<p class="small muted" id="live">Real listings from ${LIVE.org} are about ${ld} miles from ${esc(S.loc)}, outside your radius. <button class="link" data-act="bfilter" data-k="dist" data-v="any">Show them anyway</button></p>`;
-  const dogs=LIVE.pets.filter(p=>p[1]==='dog').length,cats=LIVE.pets.length-dogs;
+  const ld=milesTo('State College');if(F.dist!=='any'&&ld>+F.dist)return `<p class="small muted" id="live">${LIVE.pets.length} more animals at ${LIVE.org} are about ${ld} miles from ${esc(S.loc)}, outside your radius. <button class="link" data-act="bfilter" data-k="dist" data-v="any">Show them anyway</button></p>`;
   return `<div class="stack" style="gap:16px;margin-top:20px;scroll-margin-top:90px" id="live">
-   <div class="spread"><div class="sec-h"><span class="eyebrow" style="color:var(--coral-ink)">Real listings</span><h2>Available now at ${LIVE.org}</h2><p class="muted">${dogs} dogs and ${cats} cats listed by a real shelter in State College. ${esc(LIVE.addr)} · ${LIVE.hours}.</p></div><a class="btn btn-ghost btn-sm" href="${LIVE.src}" target="_blank" rel="noopener">Visit the shelter’s website</a></div>
-   <div class="banner coral"><span>${INFO}</span><span>These are real animals from the shelter’s public listings, and some may already have been adopted. ${LIVE.org} is not a TailMates partner, so these listings aren’t verified or scored. Their public listings don’t include the behavior details our matching needs. Tap any animal to visit the shelter’s website and ask about them.</span></div>
-   <div class="grid">${L.map(p=>`<a class="card" href="${p.url}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit"><div class="tile t${p.i%4}">${p.sp==='dog'?DOG:CAT}<span class="pill" style="color:var(--coral-ink)"><span class="dot"></span>Real listing</span></div><div class="body"><div class="spread"><h3>${esc(p.name)}</h3><span class="meta">${p.sp==='dog'?'Dog':'Cat'}</span></div><div class="meta">${esc(p.breed)} · ${p.age} · ${p.sex}</div><span class="link small" style="align-self:flex-start">Ask the shelter ↗</span></div></a>`).join('')||'<div class="empty">No real listings match this filter.</div>'}</div>
+   <div class="sec-h"><span class="eyebrow" style="color:var(--coral-ink)">Local shelter listings</span><h2>More animals near you at ${LIVE.org}</h2><p class="muted">Real animals listed by a shelter in State College, about ${ld} miles away. The shelter hasn’t shared behavior details yet, so these aren’t scored for compatibility. Open one to request info through TailMates.</p></div>
+   <div class="grid">${L.map(p=>`<article class="card" tabindex="0" data-act="liveopen" data-id="${p.i}" aria-label="${esc(p.name)}, ${esc(p.breed)}"><div class="tile t${p.i%4}">${p.sp==='dog'?DOG:CAT}</div><div class="body"><div class="spread"><h3>${esc(p.name)}</h3><span class="meta">${ld} mi</span></div><div class="meta">${esc(p.breed)} · ${p.age} · ${p.sex} · ${LIVE.org}</div><span class="badge">Local shelter</span></div></article>`).join('')||'<div class="empty">No local shelter listings match this filter.</div>'}</div>
   </div>`;
+}
+function openLive(i){
+  const p=LIVE.pets[i],[name,sp,breed,age,sex]=p,a={id:i,sp};
+  openLayer(`<div class="tile t${i%4}" style="position:relative;--tile:var(--${['teal-soft','yellow-soft','coral-soft','cream-deep'][i%4]})">${sp==='dog'?DOG:CAT}<span class="pill" style="left:12px;top:12px;position:absolute">Photo placeholder</span><button class="close" data-act="close">Close</button></div>
+  <div class="inner">
+    <div class="stack" style="gap:8px"><h2>${esc(name)}</h2><p class="muted">${esc(breed)} · ${age} · ${sex} · about ${milesTo('State College')} mi away</p><div class="row"><span class="badge">Local shelter</span><span class="meta">${LIVE.org}, ${esc(LIVE.addr)}</span></div></div>
+    <div class="panel stack"><h4>Not scored yet</h4><p class="muted">${LIVE.org} hasn’t shared behavior details with TailMates, so we can’t estimate compatibility for ${esc(name)}. Request info and we’ll ask the shelter the questions that matter for your home.</p></div>
+    <div class="stack"><span class="eyebrow">Behavior and needs</span><table class="traits"><tbody>${['Good with children','Good with dogs','Good with cats',sp==='dog'?'House-trained':'Litter-trained','Comfortable alone','Daily exercise needs'].map(t=>`<tr><td>${t}</td><td><span class="unk">Unknown</span></td></tr>`).join('')}</tbody></table></div>
+    <div class="stack"><span class="eyebrow">Visiting</span><p>${LIVE.hours}.</p></div>
+    <button class="btn btn-primary" data-act="liverequest" data-id="${i}">Request info through TailMates</button>
+  </div>`,'side');
 }
 /* ---------- location ---------- */
 const PLACES={'State College':[40.7934,-77.86],'Bellefonte':[40.9134,-77.7783],'Lewistown':[40.5992,-77.5714],'Lock Haven':[41.137,-77.4469],'Altoona':[40.5187,-78.3947],'Huntingdon':[40.4848,-78.0103],'Tyrone':[40.6706,-78.2386],'Williamsport':[41.2412,-77.0011],'Johnstown':[40.3267,-78.922],'Harrisburg':[40.2732,-76.8867],'Lancaster':[40.0379,-76.3055],'Pittsburgh':[40.4406,-79.9959],'Philadelphia':[39.9526,-75.1652],'Allentown':[40.6084,-75.4902],'Scranton':[41.409,-75.6624],'Erie':[42.1292,-80.0851]};
@@ -603,7 +612,7 @@ function openLayer(html,kind='center'){
 }
 function closeLayer(){const l=$('#layers').lastElementChild;l&&l.remove()}
 function closeAll(){$('#layers').innerHTML=''}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLayer();if((e.key==='Enter'||e.key===' ')&&e.target.matches('article.card')){e.preventDefault();openAnimal(e.target.dataset.id)}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLayer();if((e.key==='Enter'||e.key===' ')&&e.target.matches('article.card')){e.preventDefault();ACT[e.target.dataset.act](e.target)}});
 let tt;function toast(t){const el=$('#toast');el.textContent=t;el.hidden=false;clearTimeout(tt);tt=setTimeout(()=>el.hidden=true,4200)}
 
 /* ---------- animal profile ---------- */
@@ -814,7 +823,7 @@ function vBrowse(){
   const fb=(key,opts)=>opts.map(([v,l])=>`<button class="filter" data-act="bfilter" data-k="${key}" data-v="${v}" aria-pressed="${F[key]==v}">${l}</button>`).join('');
   return `<section class="view tight">
    <div class="spread"><div class="sec-h"><span class="eyebrow">Area inventory</span><h2>${list.length} animal${list.length===1?'':'s'} ${F.dist==='any'?'from all partners':`within ${F.dist} miles`} of ${esc(S.loc)}, PA</h2><p class="muted">From ${provs.length} verified shelters, rescues and breeders. Listings update as providers add or place animals.</p></div>${adopter?'':'<a class="btn btn-ghost" href="#quiz">Get personalized matches</a>'}</div>
-   <div class="banner"><span>${INFO}</span><span>The animals in this first section are fictional examples that show how TailMates matching works. <a href="#browse" data-act="tolive">Jump to ${LIVE.pets.length} real animals at ${LIVE.org}</a>.</span></div>
+   <div class="banner"><span>${INFO}</span><span>The animals in this first section are fictional examples that show how TailMates matching works. <a href="#browse" data-act="tolive">See ${LIVE.pets.length} real animals at ${LIVE.org}</a>.</span></div>
    ${locControl()}
    <div class="filters">${fb('sp',[['all','All'],['dog','Dogs'],['cat','Cats']])}<span style="width:8px"></span>${fb('src',[['all','All providers'],['shelter','Shelters and rescues'],['breeder','Breeders']])}<span style="width:8px"></span>${fb('dist',[['10','10 mi'],['25','25 mi'],['50','50 mi'],['100','100 mi'],['any','Any distance']])}${adopter?`<span style="width:8px"></span>${fb('sort',[['fit','Best fit'],['dist','Closest']])}`:''}</div>
    ${list.length?`<div class="grid">${list.map(card).join('')}</div>`:(F.dist!=='any'&&!allAnimals().filter(available).some(a=>miles(a)<=+F.dist)?nearestNote():'<div class="empty">No animals match these filters.</div>')}
@@ -1065,6 +1074,8 @@ const ACT={
  reset:()=>{const r=S.role;Object.assign(S,fresh());S.role=r;PROVIDERS.b4.verified=false;delete PROVIDERS.b4.rec;PROVIDERS.b4.feed='not listing yet';save();closeAll();render();toast('Demo data reset.')},
  bfilter:el=>{S.filter[el.dataset.k]=el.dataset.v;rerender()},
  mfilter:el=>{S.mfilter=el.dataset.v;rerender()},
+ liveopen:el=>openLive(+el.dataset.id),
+ liverequest:el=>{const n=LIVE.pets[+el.dataset.id][0];closeAll();toast(`Request sent (demo). We\u2019ll ask ${LIVE.org} about ${n} and let you know.`)},
  setloc:el=>{S.loc=el.dataset.v;S.locErr='';save();rerender();toast(`Showing animals near ${S.loc}, PA.`)},
  tolive:()=>{const go=()=>{const el=document.getElementById('live');el&&el.scrollIntoView({behavior:'smooth'})};if(location.hash!=='#browse'){location.hash='browse';setTimeout(go,80)}else go()},
  retake:()=>{S.reset=true;S.jump='species';closeAll();if(location.hash==='#quiz')render();else location.hash='quiz'},
