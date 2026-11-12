@@ -504,7 +504,7 @@ function costs(a,u,extras){
   const monthly=[['Food',a.m.food],['Routine vet care, averaged',a.m.vet],['Flea, tick and heartworm prevention',a.m.prev],['Grooming',a.m.groom],[a.sp==='cat'?'Litter, toys and supplies':'Toys, treats and supplies',a.m.misc]].filter(r=>r[1]>0);
   const base=monthly.reduce((s,r)=>s+r[1],0);
   const tier=a.fee<1000?49:a.fee<=2000?99:149;
-  const upfront=[[brd?'Purchase price':'Adoption fee',a.fee],['Tails4U match fee',brd?tier:0],['Paperwork and records transfer',brd?25:0],[brd?(a.sp==='cat'?'First kitten vet visits':'First puppy vet visits'):'Wellness check after adoption',brd?220:75],['Starter supplies (bed, crate or carrier, bowls, '+(a.sp==='cat'?'litter box)':'leash)'),a.sp==='cat'?150:250]];
+  const upfront=[[brd?'Purchase price':'Adoption fee',a.fee],['Tails4U match fee',brd?tier:0],['Paperwork and records transfer (1.5% of price)',brd?Math.round(a.fee*0.015):0],[brd?(a.sp==='cat'?'First kitten vet visits':'First puppy vet visits'):'Wellness check after adoption',brd?220:75],['Starter supplies (bed, crate or carrier, bowls, '+(a.sp==='cat'?'litter box)':'leash)'),a.sp==='cat'?150:250]];
   const up=upfront.reduce((s,r)=>s+r[1],0);
   const ext=(extras||[]).reduce((s,r)=>s+r.amt,0);
   return {monthly,base,extras:extras||[],ext,upfront,up,reserve:a.sp==='cat'?800:1200,year:up+12*(base+ext)};
@@ -810,7 +810,7 @@ function pricing(){
   return `<div class="stack" style="gap:18px"><div class="spread"><div class="sec-h"><span class="eyebrow">Pricing</span><h2>Free to look. Fees only where they make sense.</h2></div><span class="small muted">Draft pricing for customer testing</span></div>
   <div class="cols3">
     <div class="panel stack"><h3>Adopters</h3><div class="price">Free <small>to take the quiz and browse</small></div>
-      <table class="feetable"><tbody><tr><td>Shelter or rescue adoption</td><td>$0</td></tr><tr><td>Breeder purchase under $1,000</td><td>$49</td></tr><tr><td>Breeder purchase $1,000–$2,000</td><td>$99</td></tr><tr><td>Breeder purchase over $2,000</td><td>$149</td></tr><tr><td>Breeder paperwork and records transfer</td><td>$25</td></tr></tbody></table>
+      <table class="feetable"><tbody><tr><td>Shelter or rescue adoption</td><td>$0</td></tr><tr><td>Breeder purchase under $1,000</td><td>$49</td></tr><tr><td>Breeder purchase $1,000–$2,000</td><td>$99</td></tr><tr><td>Breeder purchase over $2,000</td><td>$149</td></tr><tr><td>Breeder paperwork and records transfer</td><td>1.5% of price</td></tr></tbody></table>
       <p class="small muted">One-time fee, paid only when a purchase goes through.</p></div>
     <div class="panel stack"><h3>Priority</h3><div class="price">$9.99 <small>/ month, optional</small></div>
       <ul class="clean"><li>Move ahead of non-members on breeder waitlists</li><li>Only for ID-verified adopters</li><li>Only applies to matches with no must-have conflicts or open care plan</li></ul></div>
@@ -834,7 +834,7 @@ function vIntro(kind){
      <h1>${sh?'Fewer returns. Less time screening.':'Show buyers proof, not promises.'}</h1>
      <p class="lede">${sh?'Tails4U sends you applications from verified adopters who already know what your animal needs, what it costs and what you haven’t assessed yet.':'Tails4U verifies breeders in person before they can list, then connects them with ID-verified buyers who fit their puppies and kittens.'}</p>
      <div class="row"><button class="btn btn-primary" data-act="login" data-role="${sh?'shelter':'breeder'}">See the ${sh?'shelter':'breeder'} dashboard (demo)</button>${sh?'':'<button class="btn btn-ghost" data-act="login" data-role="newbreeder">Try onboarding as a new breeder</button>'}</div></div>
-     <div class="panel sunk stack"><span class="eyebrow">What you pay</span><div class="price">${sh?'Free':'8% <small>per completed sale</small>'}</div><p class="muted">${sh?'For registered nonprofits and municipal shelters. Adopters also pay $0 for shelter adoptions.':'Plus a $150 yearly verification visit. Buyers pay a one-time match fee of $49–$149 and a $25 paperwork fee.'}</p></div></div>
+     <div class="panel sunk stack"><span class="eyebrow">What you pay</span><div class="price">${sh?'Free':'8% <small>per completed sale</small>'}</div><p class="muted">${sh?'For registered nonprofits and municipal shelters. Adopters also pay $0 for shelter adoptions.':'Plus a $150 yearly verification visit. Buyers pay a one-time match fee of $49–$149 and a paperwork fee of 1.5% of the price.'}</p></div></div>
    <div class="cols3">${B.map(b=>`<div class="stack"><h3>${b[0]}</h3><p class="muted">${b[1]}</p></div>`).join('')}</div>
    <div class="panel stack"><span class="eyebrow">Getting started</span><h2>Onboarding in four steps</h2>
      <div>${steps.map((s,i)=>`<div class="vstep"><span class="vnum">${i+1}</span><span>${s}</span><span></span></div>`).join('')}</div>
