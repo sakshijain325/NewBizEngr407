@@ -1,4 +1,4 @@
-# TailoredForYou
+# Tailored4You
 
 A pet-matching prototype for ENGR 407 (Product Innovation). People take a lifestyle quiz and get ranked dog and cat matches from vetted shelters and breeders. Each match explains why the animal fits and what to ask before meeting. Shelters get a dashboard of pre-screened inquiries ranked by fit.
 
